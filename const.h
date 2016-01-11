@@ -40,4 +40,7 @@ $kCort_shinozaki 	= "javascript:changeSelectBtnGif(12,%2027,%200022);";
 $kCort_Ariake 	= "javascript:changeSelectBtnGif(24,%2027,%200061);";
 $kCort_AOoi	 	= "javascript:changeSelectBtnGif(26,%2027,%200065);";
 
+// slack投稿用テキスト
+$kSlack_text = '芝公園のテニスコートが空いてるよ!予約しよう！https://yoyaku.sports.metro.tokyo.jp/';
+
 ?>
