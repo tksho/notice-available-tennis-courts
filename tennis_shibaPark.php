@@ -59,7 +59,7 @@ foreach( $link as $value )
 	}
 }
 
-// 空きコートがあればメールで通知
+// 空きコートがあれば、メールとslackへ通知
 if( $bool == true) {
 
 	// スクリーンショット撮影
@@ -68,6 +68,12 @@ if( $bool == true) {
 
 	// メール送信
 	sendNotification($kMailUsername, $kMailPassword, $kMailFrom, $kMailTo);
+
+    // slackに送信
+    $text = urlencode($kSlack_text);
+    $url = "https://slack.com/api/chat.postMessage?token=${kSlackApiKey}&channel=%23${kChannel}&text=${text}&as_user=false";
+    file_get_contents($url);
+
 }
 
 // Firefoxクローズ
