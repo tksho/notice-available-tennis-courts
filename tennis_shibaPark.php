@@ -10,29 +10,35 @@ require_once __DIR__ . '/lib/PHPMailer-master/PHPMailerAutoload.php';
 require_once __DIR__ . '/const.h';
 require_once __DIR__ . '/secret.h';
 
-// Firefox起動
+// Chrome起動
 $host = 'http://localhost:4444/wd/hub'; // this is the default
-$capabilities = DesiredCapabilities::firefox();
+$capabilities = DesiredCapabilities::chrome();
 $driver = RemoteWebDriver::create($host, $capabilities, 5000);
 
 // テニスコート予約サイトへ遷移
 $driver->get($kUrl);
+sleep(4);
 
 // パソコンからのご利用はこちらをクリック
 click_a_tag_byHref($driver, $kPcUser);
+sleep(4);
 
 // 施設の空き状況をクリック
 $driver = $driver->switchTo()->frame($kTopLightNaviFramename);
 click_a_tag_byHref($driver, $kAvailable_facl);
+sleep(4);
 
 // 検索をクリック
 click_a_tag_byHref($driver, $kToSearch);
+sleep(4);
 
 // 種目をクリック
 click_a_tag_byHref($driver, $kShumoku);
+sleep(4);
 
 // テニス（人工芝）をクリック
 click_a_tag_byHref($driver, $kTennis_shiba);
+sleep(4);
 
 // 検索条件と「芝公園」をクリックして検索
 click_a_tag_byHref($driver, $kMonth1);
@@ -43,6 +49,7 @@ click_a_tag_byHref($driver, $kThursday);
 click_a_tag_byHref($driver, $kFriday);
 click_a_tag_byHref($driver, $kCort_shibapark);
 click_a_tag_byHref($driver, $kDoSearch);
+sleep(4);
 
 // 19:00〜21:00台に空きコートがあるか
 $link = $driver->findElements(
@@ -76,7 +83,7 @@ if( $bool == true) {
 
 }
 
-// Firefoxクローズ
+// Chromeクローズ
 $driver->quit();
 
 //--------------------------------------------------------------------------
@@ -90,6 +97,7 @@ function click_a_tag_byHref($inWebDriver, $inHref) {
 	$link = $inWebDriver->findElements(
 		WebDriverBy::tagName('a')
 	);
+
 
 	// 指定のhrefを持つ<a>タグをクリック
 	foreach( $link as $value )

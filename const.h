@@ -7,38 +7,36 @@ $kUrl = "https://yoyaku.sports.metro.tokyo.jp/";
 $kTopLightNaviFramename = "pawae1002";
 
 // PCユーザ用ページリンク
-$kPcUser = "https://yoyaku.sports.metro.tokyo.jp/web/index.jsp";
+$kPcUser = "https://yoyaku.sports.metro.tokyo.jp/web/";
 
 // 施設の空き状況リンク
-$kAvailable_facl = "javascript:doActionFrame(((_dom%20==%203)%20?%20document.layers['disp'].document.formWTransInstSrchVacantAction%20:%20document.formWTransInstSrchVacantAction%20),%20gRsvWTransInstSrchVacantAction);";
+$kAvailable_facl = "javascript:doActionFrame(((_dom == 3) ? document.layers['disp'].document.formWTransInstSrchVacantAction : document.formWTransInstSrchVacantAction ), gRsvWTransInstSrchVacantAction);";
 
 // 検索ページリンク
-$kToSearch = "javascript:doAction((_dom%20==%203)%20?%20document.layers['disp'].document.formWTransInstSrchMultipleAction%20:%20document.formWTransInstSrchMultipleAction,%20gRsvWTransInstSrchMultipleAction);";
+$kToSearch = "javascript:doComplexSearchAction((_dom == 3) ? document.layers['disp'].document.form1 : document.form1, gRsvWTransInstSrchMultipleAction);";
 
 // 種目リンク
-$kShumoku	= "javascript:sendSelectWeekNum2((_dom%20==%203)%20?%20document.layers['disp'].document.formWTransInstSrchMultipleAction%20:%20document.formWTransInstSrchMultipleAction,%20gRsvWTransInstSrchPpsAction);";
+$kShumoku	= "javascript:sendSelectWeekNum2((_dom == 3) ? document.layers['disp'].document.form1 : document.form1, gRsvWTransInstSrchPpsAction);";
 
 // 人工芝テニスリンク
-$kTennis_shiba	= "javascript:sendPpsCd((_dom%20==%203)%20?%20document.layers['disp'].document.formWTransInstSrchMultipleAction%20:%20document.formWTransInstSrchMultipleAction,%20gRsvWTransInstSrchMultipleAction,%20'0'%20,%20'2023')";
+$kTennis_shiba	= "javascript:doTransInstSrchMultipleAction((_dom == 3) ? document.layers['disp'].document.form1 : document.form1, gRsvWTransInstSrchMultipleAction, '1000' , '1030')";
 
 // 検索条件
 $kMonth1 	= "javascript:changeMonthGif(0)";
-$kMonth2 	= "javascript:changeMonthGif(1)";
-$kMonday 	= "javascript:changeWeekGif((_dom%20==%203)%20?%20document.layers['disp'].document.weektype0%20:%20document.weektype0,%200);";
-$kTuesday 	= "javascript:changeWeekGif((_dom%20==%203)%20?%20document.layers['disp'].document.weektype1%20:%20document.weektype1,%201);";
-$kWednesday = "javascript:changeWeekGif((_dom%20==%203)%20?%20document.layers['disp'].document.weektype2%20:%20document.weektype2,%202);";
-$kThursday 	= "javascript:changeWeekGif((_dom%20==%203)%20?%20document.layers['disp'].document.weektype3%20:%20document.weektype3,%203);";
-$kFriday 	= "javascript:changeWeekGif((_dom%20==%203)%20?%20document.layers['disp'].document.weektype4%20:%20document.weektype4,%204);";
-$kSaturday 	= "javascript:changeWeekGif((_dom%20==%203)%20?%20document.layers['disp'].document.weektype5%20:%20document.weektype5,%205);";
-$kSunday 	= "javascript:changeWeekGif((_dom%20==%203)%20?%20document.layers['disp'].document.weektype6%20:%20document.weektype6,%206);";
-$kHoliday 	= "javascript:changeWeekGif((_dom%20==%203)%20?%20document.layers['disp'].document.weektype7%20:%20document.weektype7,%207);";
-$kDoSearch	= "javascript:sendSelectWeekNum((_dom%20==%203)%20?%20document.layers['disp'].document.formWTransInstSrchMultipleAction%20:%20document.formWTransInstSrchMultipleAction,%20gRsvWGetInstSrchInfAction);";
-
+//$kMonth2 	= "javascript:changeMonthGif(1)";
+$kMonday 	= "javascript:changeWeekGif((_dom == 3) ? document.layers['disp'].document.weektype0 : document.weektype0, 0);";
+$kTuesday 	= "javascript:changeWeekGif((_dom == 3) ? document.layers['disp'].document.weektype1 : document.weektype1, 1);";
+$kWednesday = "javascript:changeWeekGif((_dom == 3) ? document.layers['disp'].document.weektype2 : document.weektype2, 2);";
+$kThursday 	= "javascript:changeWeekGif((_dom == 3) ? document.layers['disp'].document.weektype3 : document.weektype3, 3);";
+$kFriday 	= "javascript:changeWeekGif((_dom == 3) ? document.layers['disp'].document.weektype4 : document.weektype4, 4);";
+$kSaturday 	= "javascript:changeWeekGif((_dom == 3) ? document.layers['disp'].document.weektype5 : document.weektype5, 5);";
+$kSunday 	= "javascript:changeWeekGif((_dom == 3) ? document.layers['disp'].document.weektype6 : document.weektype6, 6);";
+$kHoliday 	= "javascript:changeWeekGif((_dom == 3) ? document.layers['disp'].document.weektype7 : document.weektype7, 7);";
+$kDoSearch	= "javascript:sendSelectWeekNum((_dom == 3) ? document.layers['disp'].document.form1 : document.form1, gRsvWGetInstSrchInfAction);";
+               
 // テニスコートのボタン
-$kCort_shibapark 	= "javascript:changeSelectBtnGif(1,%2027,%200002);";
-$kCort_shinozaki 	= "javascript:changeSelectBtnGif(12,%2027,%200022);";
-$kCort_Ariake 	= "javascript:changeSelectBtnGif(24,%2027,%200061);";
-$kCort_AOoi	 	= "javascript:changeSelectBtnGif(26,%2027,%200065);";
+$kCort_shibapark 	= "javascript:changeSelectBtnGif(1, 27, 1010);";
+$kCort_AOoi	 	= "javascript:changeSelectBtnGif(25, 27, 1310);";
 
 // slack投稿用テキスト
 $kSlack_text = '芝公園のテニスコートが空いてるよ!予約しよう！https://yoyaku.sports.metro.tokyo.jp/';
