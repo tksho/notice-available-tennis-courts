@@ -51,38 +51,19 @@ click_a_tag_byHref($driver, $kCort_shibapark);
 click_a_tag_byHref($driver, $kDoSearch);
 sleep(4);
 
-// 19:00〜21:00台に空きコートがあるか
-$link = $driver->findElements(
-	WebDriverBy::cssSelector("table tbody tr[bgcolor='#ffffff'] td:last-child")
-);
-foreach( $link as $value )
-{
-	$bool = false;
-	$numSpare = $value->gettext();
-
-	if( strcmp($numSpare,"－") != 0 && strcmp($numSpare,"×") != 0 ) {
-		$bool = true;
-		break;
-	}
-}
-
-// 空きコートがあれば、メールとslackへ通知
+// 夜（19:00〜21:00）に空きコートがある?
+$bool = isEnableReserve_night($driver);
 if( $bool == true) {
-
-	// スクリーンショット撮影
+	// スクリーンショットをエビデンスとして保存
 	$fileName 	= __DIR__ . '/capture/evidence.png';
 	$png 		= $driver->takeScreenshot($fileName);
 
-	// メール送信
-	sendNotification($kMailUsername, $kMailPassword, $kMailFrom, $kMailTo);
-
-    // slackに送信
-    $text = urlencode($kSlack_text);
+	// メールとslackで通知
+	sendNotification_fromMyGmail($kMailUsername, $kMailPassword, $kMailFrom, $kMailTo, $kMailTitle_shibapark, $kMailBody_shibapark);
+    $text = urlencode($kSlackBody_shibapark);
     $url = "https://slack.com/api/chat.postMessage?token=${kSlackApiKey}&channel=%23${kChannel}&text=${text}&as_user=false";
     file_get_contents($url);
-
 }
-
 sleep(4);
 
 // [戻る]ボタンを押す
@@ -95,37 +76,18 @@ click_a_tag_byHref($driver, $kCort_hibiya);
 click_a_tag_byHref($driver, $kDoSearch);
 sleep(4);
 
-
-// 19:00〜21:00台に空きコートがあるか
-$link = $driver->findElements(
-	WebDriverBy::cssSelector("table tbody tr[bgcolor='#ffffff'] td:last-child")
-);
-foreach( $link as $value )
-{
-	$bool = false;
-	$numSpare = $value->gettext();
-
-	if( strcmp($numSpare,"－") != 0 && strcmp($numSpare,"×") != 0 ) {
-		$bool = true;
-		break;
-	}
-}
-
-// 空きコートがあれば、メールとslackへ通知
+// 夜（19:00〜21:00）に空きコートがある？
+$bool = isEnableReserve_night($driver);
 if( $bool == true) {
-
-	// スクリーンショット撮影
+	// スクリーンショットをエビデンスとして保存
 	$fileName 	= __DIR__ . '/capture/evidence.png';
 	$png 		= $driver->takeScreenshot($fileName);
 
-	// メール送信
-	sendNotification($kMailUsername, $kMailPassword, $kMailFrom, $kMailTo);
-
-    // slackに送信
-    $text = urlencode($kSlack_text);
+	// メールとslackで通知
+	sendNotification_fromMyGmail($kMailUsername, $kMailPassword, $kMailFrom, $kMailTo, $kMailTitle_hibiya, $kMailBody_hibiya);
+    $text = urlencode($kSlackBody_hibiya);
     $url = "https://slack.com/api/chat.postMessage?token=${kSlackApiKey}&channel=%23${kChannel}&text=${text}&as_user=false";
     file_get_contents($url);
-
 }
 
 // Chromeクローズ
@@ -156,9 +118,9 @@ function click_a_tag_byHref($inWebDriver, $inHref) {
 }
 
 /*
- *　テニスコートが空いてることをgmailで通知
+ *　テニスコートが空いてることをGmailで通知
  */
-function sendNotification($gmailUsername, $gmailPassword, $mailFromAddr, $mailToAddr) {
+function sendNotification_fromMyGmail($gmailUsername, $gmailPassword, $mailFromAddr, $mailToAddr, $inTitle, $inBody) {
 
 	mb_language("japanese");
 	mb_internal_encoding("UTF-8");
@@ -171,8 +133,8 @@ function sendNotification($gmailUsername, $gmailPassword, $mailFromAddr, $mailTo
 	$mailer->Password = $gmailPassword;  // Gmailのパスワード
 	$mailer->From     = $mailFromAddr; 	// Fromのメールアドレス
 	$mailer->FromName = mb_encode_mimeheader(mb_convert_encoding("コート空き検知システム","JIS","UTF-8"));
-	$mailer->Subject  = mb_encode_mimeheader(mb_convert_encoding("芝公園か日比谷公園のテニスコートが空いたでー","JIS","UTF-8"));
-	$mailer->Body     = "Hello\n\nYou're able to reserve the tennis court at Shiba-park, between 19:00-21:00, weekday, This month. \n\nLet's Reservation!\nhttps://yoyaku.sports.metro.tokyo.jp/";
+	$mailer->Subject  = mb_encode_mimeheader(mb_convert_encoding($inTitle,"JIS","UTF-8"));
+	$mailer->Body     = $inBody;
 	$mailer->AddAddress($mailToAddr); // 宛先
 //	$mailer->addAttachment(__DIR__ . '/capture/evidence.png');
 	  
@@ -182,6 +144,26 @@ function sendNotification($gmailUsername, $gmailPassword, $mailFromAddr, $mailTo
 	} else {
 		echo "Message has been sent";
 	}
+}
+
+/*
+ *　夜（19:00〜21:00）の空きコートがあるか？
+ *  戻り値 true:あり、false：なし
+ */
+function isEnableReserve_night($inWebDriver) {
+
+	$link = $inWebDriver->findElements(
+		WebDriverBy::cssSelector("table tbody tr[bgcolor='#ffffff'] td:last-child")
+	);
+	foreach( $link as $value )
+	{
+		$numSpare = $value->gettext();
+
+		if( strcmp($numSpare,"－") != 0 && strcmp($numSpare,"×") != 0 ) {
+			return true;
+		}
+	}
+	return false;
 }
 
 ?>
