@@ -83,6 +83,52 @@ if( $bool == true) {
 
 }
 
+sleep(4);
+
+// [戻る]ボタンを押す
+click_a_tag_byHref($driver, $kModoru);
+sleep(4);
+
+// 日比谷公園で検索
+// 検索条件と「芝公園」をクリックして検索
+click_a_tag_byHref($driver, $kCort_shibapark);
+click_a_tag_byHref($driver, $kCort_hibiya);
+click_a_tag_byHref($driver, $kDoSearch);
+sleep(4);
+
+
+// 19:00〜21:00台に空きコートがあるか
+$link = $driver->findElements(
+	WebDriverBy::cssSelector("table tbody tr[bgcolor='#ffffff'] td:last-child")
+);
+foreach( $link as $value )
+{
+	$bool = false;
+	$numSpare = $value->gettext();
+
+	if( strcmp($numSpare,"－") != 0 && strcmp($numSpare,"×") != 0 ) {
+		$bool = true;
+		break;
+	}
+}
+
+// 空きコートがあれば、メールとslackへ通知
+if( $bool == true) {
+
+	// スクリーンショット撮影
+	$fileName 	= __DIR__ . '/capture/evidence.png';
+	$png 		= $driver->takeScreenshot($fileName);
+
+	// メール送信
+	sendNotification($kMailUsername, $kMailPassword, $kMailFrom, $kMailTo);
+
+    // slackに送信
+    $text = urlencode($kSlack_text);
+    $url = "https://slack.com/api/chat.postMessage?token=${kSlackApiKey}&channel=%23${kChannel}&text=${text}&as_user=false";
+    file_get_contents($url);
+
+}
+
 // Chromeクローズ
 $driver->quit();
 
@@ -113,7 +159,6 @@ function click_a_tag_byHref($inWebDriver, $inHref) {
 /*
  *　テニスコートが空いてることをgmailで通知
  */
-
 function sendNotification($gmailUsername, $gmailPassword, $mailFromAddr, $mailToAddr) {
 
 	mb_language("japanese");
@@ -127,7 +172,7 @@ function sendNotification($gmailUsername, $gmailPassword, $mailFromAddr, $mailTo
 	$mailer->Password = $gmailPassword;  // Gmailのパスワード
 	$mailer->From     = $mailFromAddr; 	// Fromのメールアドレス
 	$mailer->FromName = mb_encode_mimeheader(mb_convert_encoding("コート空き検知システム","JIS","UTF-8"));
-	$mailer->Subject  = mb_encode_mimeheader(mb_convert_encoding("芝公園のテニスコートが空いたでー","JIS","UTF-8"));
+	$mailer->Subject  = mb_encode_mimeheader(mb_convert_encoding("芝公園か日比谷公園のテニスコートが空いたでー","JIS","UTF-8"));
 	$mailer->Body     = "Hello\n\nYou're able to reserve the tennis court at Shiba-park, between 19:00-21:00, weekday, This month. \n\nLet's Reservation!\nhttps://yoyaku.sports.metro.tokyo.jp/";
 	$mailer->AddAddress($mailToAddr); // 宛先
 //	$mailer->addAttachment(__DIR__ . '/capture/evidence.png');
