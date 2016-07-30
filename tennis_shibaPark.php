@@ -54,10 +54,6 @@ sleep(4);
 // 夜（19:00〜21:00）に空きコートがある?
 $bool = isEnableReserve_night($driver);
 if( $bool == true) {
-	// スクリーンショットをエビデンスとして保存
-	$fileName 	= __DIR__ . '/capture/evidence.png';
-	$png 		= $driver->takeScreenshot($fileName);
-
 	// メールとslackで通知
 	sendNotification_fromMyGmail($kMailUsername, $kMailPassword, $kMailFrom, $kMailTo, $kMailTitle_shibapark, $kMailBody_shibapark);
     $text = urlencode($kSlackBody_shibapark);
@@ -79,15 +75,54 @@ sleep(4);
 // 夜（19:00〜21:00）に空きコートがある？
 $bool = isEnableReserve_night($driver);
 if( $bool == true) {
-	// スクリーンショットをエビデンスとして保存
-	$fileName 	= __DIR__ . '/capture/evidence.png';
-	$png 		= $driver->takeScreenshot($fileName);
-
 	// メールとslackで通知
 	sendNotification_fromMyGmail($kMailUsername, $kMailPassword, $kMailFrom, $kMailTo, $kMailTitle_hibiya, $kMailBody_hibiya);
     $text = urlencode($kSlackBody_hibiya);
     $url = "https://slack.com/api/chat.postMessage?token=${kSlackApiKey}&channel=%23${kChannel}&text=${text}&as_user=false";
     file_get_contents($url);
+}
+
+// [戻る]ボタンを押す
+click_a_tag_byHref($driver, $kModoru);
+sleep(4);
+
+
+// 翌月の予約状況も確認できるなら調べる（日比谷公園->芝公園の順番）
+$bool = isEnableReserve_nextMonth($driver);
+if($bool == true) {
+	click_a_tag_byHref($driver, $kMonth2);
+	click_a_tag_byHref($driver, $kDoSearch);
+	sleep(4);
+
+	// 夜（19:00〜21:00）に空きコートがある？
+	$bool = isEnableReserve_night($driver);
+	if( $bool == true) {
+		// メールとslackで通知
+		sendNotification_fromMyGmail($kMailUsername, $kMailPassword, $kMailFrom, $kMailTo, $kMailTitle_hibiya, $kMailBody_hibiya);
+	    $text = urlencode($kSlackBody_hibiya);
+	    $url = "https://slack.com/api/chat.postMessage?token=${kSlackApiKey}&channel=%23${kChannel}&text=${text}&as_user=false";
+	    file_get_contents($url);
+	}
+
+	// [戻る]ボタンを押す
+	click_a_tag_byHref($driver, $kModoru);
+	sleep(4);
+
+	// 「芝公園」のみを選択
+	click_a_tag_byHref($driver, $kCort_shibapark);
+	click_a_tag_byHref($driver, $kCort_hibiya);
+	click_a_tag_byHref($driver, $kDoSearch);
+	sleep(4);
+
+	// 夜（19:00〜21:00）に空きコートがある？
+	$bool = isEnableReserve_night($driver);
+	if( $bool == true) {
+		// メールとslackで通知
+		sendNotification_fromMyGmail($kMailUsername, $kMailPassword, $kMailFrom, $kMailTo, $kMailTitle_shibapark, $kMailBody_shibapark);
+	    $text = urlencode($kSlackBody_shibapark);
+	    $url = "https://slack.com/api/chat.postMessage?token=${kSlackApiKey}&channel=%23${kChannel}&text=${text}&as_user=false";
+	    file_get_contents($url);
+	}
 }
 
 // Chromeクローズ
@@ -104,7 +139,6 @@ function click_a_tag_byHref($inWebDriver, $inHref) {
 	$link = $inWebDriver->findElements(
 		WebDriverBy::tagName('a')
 	);
-
 
 	// 指定のhrefを持つ<a>タグをクリック
 	foreach( $link as $value )
@@ -131,12 +165,11 @@ function sendNotification_fromMyGmail($gmailUsername, $gmailPassword, $mailFromA
 	$mailer->SMTPAuth = TRUE;
 	$mailer->Username = $gmailUsername;  // Gmailのアカウント名
 	$mailer->Password = $gmailPassword;  // Gmailのパスワード
-	$mailer->From     = $mailFromAddr; 	// Fromのメールアドレス
+	$mailer->From     = $mailFromAddr; 	 // Fromのメールアドレス
 	$mailer->FromName = mb_encode_mimeheader(mb_convert_encoding("コート空き検知システム","JIS","UTF-8"));
 	$mailer->Subject  = mb_encode_mimeheader(mb_convert_encoding($inTitle,"JIS","UTF-8"));
 	$mailer->Body     = $inBody;
 	$mailer->AddAddress($mailToAddr); // 宛先
-//	$mailer->addAttachment(__DIR__ . '/capture/evidence.png');
 	  
 	if( !$mailer->Send() ){
 		echo "Message was not sent<br/ >";
@@ -163,6 +196,29 @@ function isEnableReserve_night($inWebDriver) {
 			return true;
 		}
 	}
+	return false;
+}
+
+/*
+ *　翌月の予約状況も見られるか？
+ *  戻り値 true:あり、false：なし
+ */
+function isEnableReserve_nextMonth($inWebDriver) {
+
+	// ページ内の<a>タグ全て取得
+	$link = $inWebDriver->findElements(
+		WebDriverBy::tagName('a')
+	);
+
+	// 翌月のボタンがある？
+	foreach( $link as $value )
+	{
+		if( strcmp($value->getAttribute('href'), $kMonth2) == 0 )
+		{
+			return true;
+		}
+	}
+
 	return false;
 }
 

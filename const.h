@@ -43,8 +43,8 @@ $kCort_AOoi	 	= "javascript:changeSelectBtnGif(25, 27, 1310);";
 $kMailTitle_shibapark = "芝公園のテニスコートが空いたでー";
 $kMailTitle_hibiya = "日比谷公園のテニスコートが空いたでー";
 // メール本文
-$kMailBody_shibapark = "Hello\n\nYou're able to reserve the tennis court at Shiba-park, between 19:00-21:00, weekday, This month. \n\nLet's Reservation!\nhttps://yoyaku.sports.metro.tokyo.jp/";
-$kMailBody_hibiya = "Hello\n\nYou're able to reserve the tennis court at Hibiya-park, between 19:00-21:00, weekday, This month. \n\nLet's Reservation!\nhttps://yoyaku.sports.metro.tokyo.jp/";
+$kMailBody_shibapark = "Hello\n\nYou're able to reserve the tennis court at Shiba-park, between 19:00-21:00, weekday. \n\nLet's Reservation!\nhttps://yoyaku.sports.metro.tokyo.jp/";
+$kMailBody_hibiya = "Hello\n\nYou're able to reserve the tennis court at Hibiya-park, between 19:00-21:00, weekday. \n\nLet's Reservation!\nhttps://yoyaku.sports.metro.tokyo.jp/";
 // slack投稿本文
 $kSlackBody_shibapark = '芝公園のテニスコートが空いてるよ!予約しよう！https://yoyaku.sports.metro.tokyo.jp/';
 $kSlackBody_hibiya = '日比谷公園のテニスコートが空いてるよ!予約しよう！https://yoyaku.sports.metro.tokyo.jp/';
