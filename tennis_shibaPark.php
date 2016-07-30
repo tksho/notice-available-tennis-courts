@@ -89,8 +89,7 @@ sleep(4);
 click_a_tag_byHref($driver, $kModoru);
 sleep(4);
 
-// 日比谷公園で検索
-// 検索条件と「芝公園」をクリックして検索
+// 「日比谷公園」を選択して検索
 click_a_tag_byHref($driver, $kCort_shibapark);
 click_a_tag_byHref($driver, $kCort_hibiya);
 click_a_tag_byHref($driver, $kDoSearch);
