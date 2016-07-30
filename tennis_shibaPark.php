@@ -37,11 +37,11 @@ $driver->quit();
  */
 function checkEnableReserve($inWebDriver, $inMonth, $inCort, $inMailTitle, $inMailBody, $inSlackbody) {
 
-	global $kUrl; 					// テニス予約サイトURL
-	global $kTopLightNaviFramename; // テニス予約サイトTOP 左ナビフレーム名
-	global $kPcUser; 				// PCユーザ用ページリンク
-	global $kAvailable_facl; 		// 施設の空き状況リンク
-	global $kToSearch; 				// 検索ページリンク
+	global $kUrl;					// テニス予約サイトURL
+	global $kTopLightNaviFramename;	// テニス予約サイトTOP 左ナビフレーム名
+	global $kPcUser;				// PCユーザ用ページリンク
+	global $kAvailable_facl;		// 施設の空き状況リンク
+	global $kToSearch;				// 検索ページリンク
 	global $kShumoku;				// 種目リンク
 	global $kTennis_shiba;			// 人工芝テニスリンク
 	global $kMonth1;				// 検索条件
@@ -91,7 +91,7 @@ function checkEnableReserve($inWebDriver, $inMonth, $inCort, $inMailTitle, $inMa
 	click_a_tag_byHref($inWebDriver, $kTennis_shiba);
 	sleep(4);
 
-	// 検索条件と「芝公園」をクリックして検索
+	// 検索条件をクリックして検索
 	click_a_tag_byHref($inWebDriver, $inMonth);
 	click_a_tag_byHref($inWebDriver, $kMonday);
 	click_a_tag_byHref($inWebDriver, $kTuesday);
@@ -147,9 +147,9 @@ function sendNotification_fromMyGmail($gmailUsername, $gmailPassword, $mailFromA
 	$mailer->IsSMTP();
 	$mailer->Host 		= 'ssl://smtp.gmail.com:465';
 	$mailer->SMTPAuth 	= TRUE;
-	$mailer->Username 	= $gmailUsername;  // Gmailのアカウント名
-	$mailer->Password 	= $gmailPassword;  // Gmailのパスワード
-	$mailer->From     	= $mailFromAddr; 	 // Fromのメールアドレス
+	$mailer->Username 	= $gmailUsername; 	// Gmailのアカウント名
+	$mailer->Password 	= $gmailPassword;  	// Gmailのパスワード
+	$mailer->From     	= $mailFromAddr; 	// Fromのメールアドレス
 	$mailer->FromName 	= mb_encode_mimeheader(mb_convert_encoding("コート空き検知システム","JIS","UTF-8"));
 	$mailer->Subject  	= mb_encode_mimeheader(mb_convert_encoding($inTitle,"JIS","UTF-8"));
 	$mailer->Body     	= $inBody;
